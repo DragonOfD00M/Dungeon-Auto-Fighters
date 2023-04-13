@@ -1,0 +1,26 @@
+{
+    "Eksempel. Her står Item level": [{
+        "name":"item navn",
+        "colour":"Hvilken RGB value itemen har. Vil blive udskiftet med en billede fil",
+        "hp":"Itemens liv bonus (hvis der er en)",
+        "dmg":"Itemens skade bonus (hvis der er en)",
+        "effekt":"Itemens effekt navn"
+    }],
+    "LEVEL 1":[
+        {
+            "name":"sword",
+            "colour":[100,100,100],
+            "hp":0,
+            "dmg":2,
+            "effect":"None"
+        },
+        {
+            "name":"shield",
+            "colour":[125,125,0],
+            "hp":2,
+            "dmg":0,
+            "effect":"None"
+        }
+    ]
+
+}

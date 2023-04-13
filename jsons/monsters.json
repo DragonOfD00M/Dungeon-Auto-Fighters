@@ -1,0 +1,26 @@
+{
+    "Eksempel. Her står monster level": [{
+        "name":"monsteret navn",
+        "colour":"Hvilken RGB value monsteret har. Vil blive udskiftet med en billede fil",
+        "hp":"Monsterets base liv",
+        "dmg":"Monsterets base skade"
+    }],
+    "LEVEL 1": [{
+        "name":"GOBLIN",
+        "colour":[50,180,0],
+        "hp":1,
+        "dmg":1
+    },
+    {
+        "name":"COBOLD",
+        "colour":[180,50,0],
+        "hp":1,
+        "dmg":3
+    },
+    {
+        "name":"HUMAN",
+        "colour":[180,180,0],
+        "hp":3,
+        "dmg":1
+    }]
+}
