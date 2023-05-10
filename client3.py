@@ -47,6 +47,9 @@ coins = 10
 AvailableMonsters = []
 AvailableItems = []
 
+team1 = ""
+team2 = ""
+
 #FUNCTIONS
 def encodeTeam(list):
     string = "£" 
@@ -61,13 +64,21 @@ def encodeTeam(list):
         else:
             string=string+stringbuf+"#"
     return string
-
+def decodeTeam(team):
+    team = team.split("#")
+    for index, entry in enumerate(team):
+        if entry == 'None':
+            team[index] = None
+        else:
+            team[index] = team[index].split("%")
+            team[index][1] = int(team[index][1])
+            team[index][2] = int(team[index][2])
+    return team
 def updateLists() -> None:
     for x in jmonster["LEVEL "+str(playerLevel)]:
         AvailableMonsters.append(x["name"])
     for x in jitem["LEVEL "+str(playerLevel)]:
         AvailableItems.append(x["name"])
-
 def fillShops(surface) -> None:
     global uid
     i=0
@@ -94,7 +105,6 @@ def fillShops(surface) -> None:
             itemShop[i] = Item(surface, 50+75*7+75*i, 400, uid, AvailableItems[random.randint(0, len(AvailableItems)-1)])
             uid+=1
         i+=1
-
 def makeHitboxes(surface):
     i = 0
     while i < len(team):
@@ -108,7 +118,6 @@ def makeHitboxes(surface):
     while i < len(itemShop):
         iShopBox.append(Hitbox(surface, 50+75*7+75*i, 400, 50, 50, i))
         i+=1
-
 def redrawWindow(surface) -> None:
     global freeze, coins, waitingText
     match gamestate:
@@ -210,13 +219,67 @@ def redrawWindow(surface) -> None:
             surface.blit(coindraw,coinrect)
             
             pygame.display.flip()
-        
         case 3:
             surface.fill((0,0,0))
 
 
             pygame.display.flip()
-
+        case 4:
+            i=0
+            surface.fill((0,0,0))
+            for index, entry in enumerate(team1):
+                if entry != None:    
+                    if index == 0:
+                        font = pygame.font.Font(size=50)
+                        for monster in jmonster["LEVEL 1"]:
+                            if monster["name"] == team1[index][0]:
+                                colour = monster["colour"]
+                        rect = pygame.Rect(screenWidth/2-200,screenHeight/2-100,100,200)
+                        pygame.draw.rect(surface,colour,rect)
+                        text = font.render(str(team1[index][1])+"      "+str(team1[index][2]), True, (255,255,255))
+                        textRect = text.get_rect()
+                        textRect.center = (screenWidth/2-200+textRect[2]/2,screenHeight/2+100-textRect[3]/2)
+                        surface.blit(text,textRect)
+                    else:
+                        font = pygame.font.Font(size=20)
+                        for monster in jmonster["LEVEL 1"]:
+                            if monster["name"] == team1[index][0]:
+                            
+                                colour = monster["colour"]
+                        rect = pygame.Rect(screenWidth/2-275-i*75,screenHeight/2,50,100)
+                        pygame.draw.rect(surface,colour,rect)
+                        text = font.render(str(team1[index][1])+"      "+str(team1[index][2]), True, (255,255,255))
+                        textRect = text.get_rect()
+                        textRect.center = (screenWidth/2-275-i*75+textRect[2]/2,screenHeight/2+100-textRect[3]/2)
+                        surface.blit(text,textRect)
+                        i+=1
+            i=0
+            for index, entry in enumerate(team2):
+                if entry != None:
+                    if index == 0:
+                        font = pygame.font.Font(size=50)
+                        for monster in jmonster["LEVEL 1"]:
+                            if monster["name"] == team2[index][0]:
+                                colour = monster["colour"]
+                        rect = pygame.Rect(screenWidth/2+100,screenHeight/2-100,100,200)
+                        pygame.draw.rect(surface,colour,rect)
+                        text = font.render(str(team2[index][1])+"      "+str(team2[index][2]), True, (255,255,255))
+                        textRect = text.get_rect()
+                        textRect.center = (screenWidth/2+100+textRect[2]/2,screenHeight/2+100-textRect[3]/2)
+                        surface.blit(text,textRect)
+                    else:
+                        font = pygame.font.Font(size=20)
+                        for monster in jmonster["LEVEL 1"]:
+                            if monster["name"] == team2[index][0]:
+                                colour = monster["colour"]
+                        rect = pygame.Rect(screenWidth/2+225+i*75,screenHeight/2,50,100)
+                        pygame.draw.rect(surface,colour,rect)
+                        text = font.render(str(team2[index][1])+"      "+str(team2[index][2]), True, (255,255,255))
+                        textRect = text.get_rect()
+                        textRect.center = (screenWidth/2+225+i*75+textRect[2]/2,screenHeight/2+100-textRect[3]/2)
+                        surface.blit(text,textRect)
+                        i+=1
+            pygame.display.flip()
 def freezeMode(surface):
     global freeze
     freeze = True
@@ -245,9 +308,8 @@ def freezeMode(surface):
             except:
                 pass
         redrawWindow(surface)
-
 def main(surface) -> None:
-    global gamestate, coins, waitingText
+    global gamestate, coins, waitingText, team1, team2
     fillShops(surface)
     makeHitboxes(surface)
     running = True
@@ -256,6 +318,8 @@ def main(surface) -> None:
     held = False
     connected = False
     i=0
+    counter = 0
+    t = 0
     while running:
         match gamestate:
             case 0:
@@ -399,9 +463,37 @@ def main(surface) -> None:
                 if i == 0:
                     team1 = encodeTeam(team)
                     team2 = n.send(team1)
-                    print(team1)
-                    print(team2)
+                    team1 = decodeTeam(team1)
+                    team2 = decodeTeam(team2)
                     i+=1
+                    gamestate = 4
+            case 4:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        sys.exit()
+                if counter == 60:
+                    t+=1
+                    counter = 0
+                else:
+                    counter+=1
+                if t == 10:
+                    if team1[0] == None or team2[0] == None:
+                        if team1[0] == None:
+                            print("Player 2 won")
+                            coins = 10
+                            gamestate = 1
+                        elif team2[0] == None:
+                            print("Player 1 won")
+                            coins = 10
+                            gamestate = 1
+                    else:
+                        team1[0][1] = team1[0][1]-team2[0][2]
+                        team2[0][1] = team2[0][1]-team1[0][2]
+                        if team1[0][1] <= 0:
+                            team1.pop(0)
+                        if team2[0][1] <= 0:
+                            team2.pop(0)
+                    t=0
 
 
                 
@@ -414,5 +506,5 @@ rerollButton = Button(gameWindow, 50, 200, 50, 50, "Roll")
 freezeButton = Button(gameWindow, screenWidth-210, 400,50,50,"Freeze")
 updateLists()
 main(gameWindow)
-print(encodeTeam(team))
+
 

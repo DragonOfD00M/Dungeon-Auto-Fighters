@@ -48,13 +48,20 @@ def threaded_client(conn,id):
                     teams[id] = reply
                     print(teams)
                     if id == 0:
-                        conn.send(str.encode(teams[1]))
-                        print("sent to player " + str(id+1))
+                        player1Ready = True
                     else:
-                        conn.send(str.encode(teams[0]))
-                        print("sent to player " + str(id+1))
-                    allready = 0
-                    lock = False
+                        player2Ready = True
+                    
+                    if player1Ready and player2Ready:
+                        if id == 0:
+                            conn.send(str.encode(teams[1]))
+                            print("sent to player " + str(id+1))
+                        else:
+                            conn.send(str.encode(teams[0]))
+                            print("sent to player " + str(id+1))
+                        allready = 0
+                        lock = False
+                        player1Ready, player2Ready = False, False
 
 
 
