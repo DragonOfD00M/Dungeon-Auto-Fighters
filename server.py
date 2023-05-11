@@ -45,14 +45,7 @@ def threaded_client(conn,id):
                             pass
                         conn.send(str.encode("wait"))
                 if reply[0] == "£":
-                    teams[id] = reply
-                    print(teams)
-                    if id == 0:
-                        player1Ready = True
-                    else:
-                        player2Ready = True
-                    
-                    if player1Ready and player2Ready:
+                    if reply == "£££": 
                         if id == 0:
                             conn.send(str.encode(teams[1]))
                             print("sent to player " + str(id+1))
@@ -61,7 +54,11 @@ def threaded_client(conn,id):
                             print("sent to player " + str(id+1))
                         allready = 0
                         lock = False
-                        player1Ready, player2Ready = False, False
+                    else:
+                        teams[id] = reply
+                        print(teams)
+                        conn.send(str.encode("tihi"))
+                
 
 
 

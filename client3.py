@@ -66,6 +66,7 @@ def encodeTeam(list):
     return string
 def decodeTeam(team):
     team = team.split("#")
+    print(team)
     for index, entry in enumerate(team):
         if entry == 'None':
             team[index] = None
@@ -463,6 +464,12 @@ def main(surface) -> None:
                 if i == 0:
                     team1 = encodeTeam(team)
                     team2 = n.send(team1)
+                    team2 = n.send("£££")
+                    print(team2)
+                    team1 = team1.replace("£","")
+                    team2 = team2.replace("£","")
+                    print(team1)
+                    print(team2)
                     team1 = decodeTeam(team1)
                     team2 = decodeTeam(team2)
                     i+=1
@@ -480,12 +487,11 @@ def main(surface) -> None:
                     if team1[0] == None or team2[0] == None:
                         if team1[0] == None:
                             print("Player 2 won")
-                            coins = 10
-                            gamestate = 1
                         elif team2[0] == None:
                             print("Player 1 won")
-                            coins = 10
-                            gamestate = 1
+                        coins = 10
+                        gamestate = 1
+                        fillShops(surface)
                     else:
                         team1[0][1] = team1[0][1]-team2[0][2]
                         team2[0][1] = team2[0][1]-team1[0][2]
@@ -494,6 +500,7 @@ def main(surface) -> None:
                         if team2[0][1] <= 0:
                             team2.pop(0)
                     t=0
+                redrawWindow(surface)
 
 
                 
