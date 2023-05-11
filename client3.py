@@ -231,7 +231,7 @@ def redrawWindow(surface) -> None:
             for index, entry in enumerate(team1):
                 if entry != None:    
                     if index == 0:
-                        font = pygame.font.Font(size=50)
+                        font = pygame.font.Font(None, 50)
                         for monster in jmonster["LEVEL 1"]:
                             if monster["name"] == team1[index][0]:
                                 colour = monster["colour"]
@@ -258,7 +258,7 @@ def redrawWindow(surface) -> None:
             for index, entry in enumerate(team2):
                 if entry != None:
                     if index == 0:
-                        font = pygame.font.Font(size=50)
+                        font = pygame.font.Font(None, 50)
                         for monster in jmonster["LEVEL 1"]:
                             if monster["name"] == team2[index][0]:
                                 colour = monster["colour"]
